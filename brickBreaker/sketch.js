@@ -2,9 +2,42 @@
 // Tony and Noah
 // April 19th, 2018
 
+let gear;
+let state;
+let intro;
+let finalLevel;
 
 
+function preload(){
+  // intro = loadImage("assets/t1.png");
+  finalLevel = loadImage("assets/final.jpg");
+}
 
+
+function setup() {
+  createCanvas(800, 800);
+  state = 1;
+}
+
+function draw() {
+  if (state === 1){
+    background(finalLevel);
+
+  }
+}
+
+function screenText(){
+  if (state === 1){
+    textAlign(CENTER);
+    fill(150, 241, 247);
+    textSize(150);
+    textStyle(BOLD);
+    textFont("Cambria");
+    text("Snake.io", width / 2, height / 2 - 100);
+  }
+
+
+}
 
 
 
