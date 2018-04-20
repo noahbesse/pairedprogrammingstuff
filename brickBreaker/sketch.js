@@ -22,6 +22,7 @@ function setup() {
 function draw() {
   if (state === 1){
     background(finalLevel);
+    screenText();
 
   }
 }
@@ -30,22 +31,14 @@ function screenText(){
   if (state === 1){
     textAlign(CENTER);
     fill(150, 241, 247);
-    textSize(150);
+    textSize(100);
     textStyle(BOLD);
     textFont("Cambria");
-    text("Snake.io", width / 2, height / 2 - 100);
+    text("Brick Breaker", width / 2, height / 2 - 100);
   }
 
 
 }
-
-
-
-
-
-
-
-
 
 
 
