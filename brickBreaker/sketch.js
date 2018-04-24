@@ -4,12 +4,12 @@
 
 let gear;
 let state;
-let intro;
+let introScreen;
 let finalLevel;
 
 
 function preload(){
-  // intro = loadImage("assets/t1.png");
+  introScreen = loadImage("assets/introScreen.jpg");
   finalLevel = loadImage("assets/final.jpg");
 }
 
@@ -21,7 +21,7 @@ function setup() {
 
 function draw() {
   if (state === 1){
-    background(finalLevel);
+    background(introScreen);
     screenText();
 
   }
@@ -31,10 +31,13 @@ function screenText(){
   if (state === 1){
     textAlign(CENTER);
     fill(150, 241, 247);
-    textSize(100);
+    textSize(150);
     textStyle(BOLD);
-    textFont("Cambria");
-    text("Brick Breaker", width / 2, height / 2 - 100);
+    textFont("Agency FB");
+    text("B R E A K E R", width / 2, height / 2 - 150);
+
+    textSize(32);
+    text("P r e s s   S P A C E   t o   p l a y", width / 2, height / 2 + 150);
   }
 
 
