@@ -3,14 +3,17 @@
 // April 19th, 2018
 let gear;
 let state;
-let introScreen;
-let finalLevel, finalLevelMusic;
+let introScreen, finalLevel;
+let platform, redBrick, blueBrick, yellowBrick, greenBrick, greyBrick;
+let finalLevelMusic;
 
 
 function preload(){
   introScreen = loadImage("assets/introScreen.jpg");
   finalLevel = loadImage("assets/final.jpg");
-  finalLevelMusic = loadSound("assets/FINALBOSSPOWERUP");
+  finalLevelMusic = loadSound("assets/FINALBOSSPOWERUP.wav");
+  platform = loadImage("assets/platform.png");
+
 }
 
 
@@ -18,14 +21,10 @@ function setup() {
   createCanvas(800, 800);
   state = 1;
 }
-function noScroll(){
-  window.scrollTo(0,0);
-}
-window.addEventListener("scrollbar", null);
-window.addEventListener("scroll", noScroll);
 
 function draw() {
   startScreen();
+  gameScreens();
 
 
 }
@@ -42,17 +41,26 @@ function startScreen(){
 
     textSize(32);
     text("P r e s s   S P A C E   t o   p l a y", width / 2, height / 2 + 150);
+
     if (keyIsPressed){
       if (keyCode === 32){
         state = 2;
       }
     }
   }
-
-
 }
 
+function gameScreens() {
+  if (state === 2) {
+    background(255);
+    placement();
+  }
+}
 
+function placement() {
+  image(platform, mouseX, 700);
+
+}
 
 class Ball{
   constructor(){
