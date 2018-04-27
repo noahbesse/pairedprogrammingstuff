@@ -19,25 +19,24 @@ function preload(){
   finalLevel = loadImage("assets/final.jpg");
   finalLevelMusic = loadSound("assets/FINALBOSSPOWERUP.wav");
   platform = loadImage("assets/platform.png");
-
 }
 
 
 function setup() {
+  let canvas = createCanvas(800, 800);
+  canvas.position(400, 0);
   noCursor();
-  let canvas =  createCanvas(800, 800);
-  canvas.position(400,0);
   state = 1;
 }
+
 function placement() {
-  image(platform, mouseX, 700);
+  let limits = constrain(mouseX - 46, 0, 708);
+  image(platform, limits, 700);
 }
 
 function draw() {
   startScreen();
   gameScreens();
-
-
 }
 
 function startScreen(){
@@ -60,14 +59,19 @@ function startScreen(){
     }
   }
 }
-function brickSpawn(){
-
-}
 
 function gameScreens() {
   if (state === 2) {
-    background(introScreen);
+    background(0);
     placement();
-    brickSpawn();
   }
+
+  if (state === 3) {
+    background(255);
+
+  }
+}
+
+function brickSpawn(){
+
 }
