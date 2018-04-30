@@ -9,6 +9,9 @@ let finalLevelMusic;
 let levelOfDifficulty = 1;
 let ballEllipse;
 let ballSpawned;
+let y = 700;
+let dx = 2;
+let dy = -2;
 
 function preload(){
   redBrick = loadImage("assets/redBrick.png");
@@ -18,57 +21,33 @@ function preload(){
   greyBrick = loadImage("assets/greyBrick.png");
   introScreen = loadImage("assets/introScreen.jpg");
   finalLevel = loadImage("assets/final.jpg");
-  finalLevelMusic = loadSound("assets/FINALBOSSPOWERUP.wav");
+  finalLevelMusic = loadSound("assets/Music/FINALBOSSPOWERUP.wav");
   platform = loadImage("assets/platform.png");
 }
 
 
 function setup() {
-  ballEllipse = new Ball;
   let canvas = createCanvas(800, 800);
   canvas.position(400, 0);
   noCursor();
   state = 1;
 }
-
-
-class Ball {
-  constructor(){
-    this.x;
-    this.y;
-    this.velocity;
-  }
-  movement(){
-    if (ballSpawned === true){
-      let ballY = 700;
-      this.velocity = 10;
-      for(let i = 700; i > 0; i--){
-        ballY = ballY - this.velocity*levelOfDifficulty;
-        ellipse(this.x,ballY,25);
-      }
-    }
-
-  }
-  spawn(){
-    ellipseMode(CENTER);
-    ballSpawned = false;
-    if (ballSpawned === false){
-      let limits = constrain(mouseX,46,754);
-      ellipse(limits,700,25);
-      if (mouseIsPressed){
-        this.x = pmouseX;
-        ballSpawned = true;
-      }
-    }
-
-
-  }
-}
+let x = mouseX;
 
 function draw() {
+  clear();
   startScreen();
   gameScreens();
+  moveTheBall();
 }
+
+function moveTheBall(){
+  if (state === 2){
+    let limits = constrain(mouseX, 46, 754);
+    ellipse(limits,700,25);
+  }
+}
+
 
 function startScreen(){
   if (state === 1){
@@ -106,8 +85,6 @@ function gameScreens() {
 function placement() {
   let limits = constrain(mouseX - 46, 0, 708);
   image(platform, limits, 700);
-  ballEllipse.spawn();
-  ballEllipse.movement();
 }
 
 function brickSpawn(){
