@@ -9,9 +9,11 @@ let platform, redBrick, blueBrick, yellowBrick, greenBrick, greyBrick;
 let finalLevelMusic;
 let ballEllipse;
 let ballSpawned;
+let x;
 let y = 700;
+let levelOfDifficulty;
 let dx = 2;
-let dy = -2;
+let dy = -2 * levelOfDifficulty;
 let brickRowCount, brickColumnCount;
 let brickX, brickY;
 let brickTopOffset = 20;
@@ -45,9 +47,11 @@ function setup() {
 
 // Displays all the aspects of the game.
 function draw() {
+
   clear();
   gameScreens();
   moveTheBall();
+  displayBall();
 }
 
 // This function controls the platform
@@ -58,9 +62,21 @@ function placement() {
 
 // This function moves the ball around the screen
 function moveTheBall(){
+  if (state !== 1 && mouseIsPressed){
+    x = mouseX;
+  }
+  x += dx;
+  y += dy;
+
+}
+
+function displayBall(){
   if (state === 2){
     let limits = constrain(mouseX, 46, 754);
     ellipse(limits,700,25);
+    if (mouseIsPressed){
+      ellipse(400,y,25);
+    }
   }
 }
 
@@ -88,7 +104,7 @@ function gameScreens() {
   if (state === 2) {
     background(introScreen);
     placement();
-    brickSpawn();
+    //brickSpawn();
   }
 
   if (state === 3) {
@@ -98,21 +114,21 @@ function gameScreens() {
 }
 
 // This function places all the bricks on the canvas
-function brickSpawn() {
-  if (state === 2) {
-    let brickRowCount = 8;
-    let brickColumnCount = 10;
-
-    for (let c=0; c<brickColumnCount; c++) {
-      for (let r=0; r<brickRowCount; r++) {
-        if (bricks[c][r].status === 1) {
-          let brickX = r * (brickWidth + brickSpacing) + brickSideOffset;
-          let brickY = c * (brickHeight + brickSpacing) + brickTopOffset;
-          bricks[c][r].x = brickX;
-          bricks[c][r].y = brickY;
-          image(greyBrick, brickX, brickY);
-        }
-      }
-    }
-  }
-}
+//function brickSpawn() {
+//   if (state === 2) {
+//     let brickRowCount = 8;
+//     let brickColumnCount = 10;
+//
+//     for (let c=0; c<brickColumnCount; c++) {
+//       for (let r=0; r<brickRowCount; r++) {
+//         if (bricks[c][r].status === 1) {
+//           let brickX = r * (brickWidth + brickSpacing) + brickSideOffset;
+//           let brickY = c * (brickHeight + brickSpacing) + brickTopOffset;
+//           bricks[c][r].x = brickX;
+//           bricks[c][r].y = brickY;
+//           image(greyBrick, brickX, brickY);
+//         }
+//       }
+//     }
+//   }
+// }
