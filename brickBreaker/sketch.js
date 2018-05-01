@@ -19,6 +19,7 @@ let brickSideOffset = 18.5;
 let brickSpacing = 5;
 let brickWidth = 72;
 let brickHeight = 32;
+let bricks = [];
 
 // Preloading the required asset
 function preload(){
@@ -41,7 +42,6 @@ function setup() {
   state = 1;
 }
 
-let x = mouseX;
 
 // Displays all the aspects of the game.
 function draw() {
@@ -102,55 +102,16 @@ function brickSpawn() {
   if (state === 2) {
     let brickRowCount = 8;
     let brickColumnCount = 10;
-    for (let c=0; c < brickColumnCount; c++){
-      for(let r=0; r < brickRowCount; r++){
-        let brickX = c*(brickWidth + brickSpacing) + brickSideOffset;
-        let brickY = r*(brickHeight + brickSpacing) + brickTopOffset;
-        image(greyBrick, brickX, brickY);
-      }
-    }
-  }
-  if (state === 3) {
-    let brickRowCount = 8;
-    let brickColumnCount = 9;
-    for (let c=0; c < brickColumnCount; c++){
-      for(let r=0; r < brickRowCount; r++){
-        let brickX = c*(brickWidth + brickSpacing) + brickSideOffset;
-        let brickY = r*(brickHeight + brickSpacing) + brickTopOffset;
-        image(redBrick, brickX, brickY);
-      }
-    }
-  }
-  if (state === 4) {
-    let brickRowCount = 8;
-    let brickColumnCount = 9;
-    for (let c=0; c < brickColumnCount; c++){
-      for(let r=0; r < brickRowCount; r++){
-        let brickX = c*(brickWidth + brickSpacing) + brickSideOffset;
-        let brickY = r*(brickHeight + brickSpacing) + brickTopOffset;
-        image(greenBrick, brickX, brickY);
-      }
-    }
-  }
-  if (state === 5) {
-    let brickRowCount = 8;
-    let brickColumnCount = 9;
-    for (let c=0; c < brickColumnCount; c++){
-      for(let r=0; r < brickRowCount; r++){
-        let brickX = c*(brickWidth + brickSpacing) + brickSideOffset;
-        let brickY = r*(brickHeight + brickSpacing) + brickTopOffset;
-        image(yellowBrick, brickX, brickY);
-      }
-    }
-  }
-  if (state === 6) {
-    let brickRowCount = 8;
-    let brickColumnCount = 9;
-    for (let c=0; c < brickColumnCount; c++){
-      for(let r=0; r < brickRowCount; r++){
-        let brickX = c*(brickWidth + brickSpacing) + brickSideOffset;
-        let brickY = r*(brickHeight + brickSpacing) + brickTopOffset;
-        image(blueBrick, brickX, brickY);
+
+    for (let c=0; c<brickColumnCount; c++) {
+      for (let r=0; r<brickRowCount; r++) {
+        if (bricks[c][r].status === 1) {
+          let brickX = r * (brickWidth + brickSpacing) + brickSideOffset;
+          let brickY = c * (brickHeight + brickSpacing) + brickTopOffset;
+          bricks[c][r].x = brickX;
+          bricks[c][r].y = brickY;
+          image(greyBrick, brickX, brickY);
+        }
       }
     }
   }
