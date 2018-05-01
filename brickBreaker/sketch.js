@@ -4,12 +4,11 @@
 
 // Variables
 let state;
-let finalLevel;
+let introScreen, finalLevel;
 let platform, redBrick, blueBrick, yellowBrick, greenBrick, greyBrick;
 let finalLevelMusic;
 let ballEllipse;
 let ballSpawned;
-let x = mouseX;
 let y = 700;
 let dx = 2;
 let dy = -2;
@@ -31,7 +30,7 @@ function preload(){
   introScreen = loadImage("assets/introScreen.jpg");
   finalLevel = loadImage("assets/final.jpg");
   platform = loadImage("assets/platform.png");
-	finalLevelMusic = loadSound("assets/Music/FINALBOSSPOWERUP.wav");
+  finalLevelMusic = loadSound("assets/Music/FINALBOSSPOWERUP.wav");
 }
 
 // This sets up the canvas, the state of the screen
@@ -42,6 +41,8 @@ function setup() {
   state = 1;
 }
 
+let x = mouseX;
+
 // Displays all the aspects of the game.
 function draw() {
   clear();
@@ -49,7 +50,7 @@ function draw() {
   moveTheBall();
 }
 
-// This function controls the platform 
+// This function controls the platform
 function placement() {
   let limits = constrain(mouseX - 46, 0, 708);
   image(platform, limits, 700);
@@ -96,7 +97,7 @@ function gameScreens() {
   }
 }
 
-// This function places all the bricks on the canvas 
+// This function places all the bricks on the canvas
 function brickSpawn() {
   if (state === 2) {
     let brickRowCount = 8;
