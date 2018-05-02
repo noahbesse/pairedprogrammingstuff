@@ -11,17 +11,21 @@ let ballEllipse;
 let ballSpawned;
 let x = 250;
 let y = 600;
+let limits;
 let ballSize;
-let dx = 2;
-let dy = -2;
-let brickRowCount, brickColumnCount;
+let dx = 5;
+let dy = -5;
+let brickRowCount = 10;
+let brickColumnCount = 6;
 let brickX, brickY;
 let brickTopOffset = 20;
 let brickSideOffset = 18.5;
 let brickSpacing = 5;
 let brickWidth = 72;
 let brickHeight = 32;
+
 let bricks = [];
+
 
 // Preloading the required asset
 function preload(){
@@ -58,7 +62,7 @@ function draw() {
 
 // This function controls the platform
 function placement() {
-  let limits = constrain(mouseX - 46, 0, 708);
+  limits = constrain(mouseX - 46, 0, 708);
   image(platform, limits, 700);
 }
 
@@ -67,11 +71,15 @@ function moveTheBall(){
   x += dx;
   y += -dy;
 
-  if (x + 10 >= width || x + 10 <= 0) {
+  if (x + 10 >= width || x -10 <= 0) {
     dx = -dx;
   }
 
-  if (y + 10 >= height || y + 10 <= 0 && y >= limits && x > paddleX && x < paddleX+paddleW){
+  if (y + 10 >= height || y -10 <= 0){
+    dy = -dy;
+  }
+
+  if (y === 700 && x <= limits + platform.width && x >= limits+ 88 - platform.width) {
     dy = -dy;
   }
 }
@@ -81,7 +89,6 @@ function displayBall(){
   fill(255);
   ellipse(x, y, ballSize, ballSize);
 }
-
 
 // This function displays all the different game screens like the intro screen the levels and the end screen
 function gameScreens() {
@@ -109,32 +116,77 @@ function gameScreens() {
     placement();
     displayBall();
     moveTheBall();
+    brickSpawn();
+    colissionDectection();
 
-    //brickSpawn();
   }
 
   if (state === 3) {
-    background(255);
-
+    background(introScreen);
+    placement();
+    displayBall();
+    moveTheBall();
+    brickSpawn();
+    colissionDectection();
   }
 }
 
-// This function places all the bricks on the canvas
-//function brickSpawn() {
-//   if (state === 2) {
-//     let brickRowCount = 8;
-//     let brickColumnCount = 10;
-//
-//     for (let c=0; c<brickColumnCount; c++) {
-//       for (let r=0; r<brickRowCount; r++) {
-//         if (bricks[c][r].status === 1) {
-//           let brickX = r * (brickWidth + brickSpacing) + brickSideOffset;
-//           let brickY = c * (brickHeight + brickSpacing) + brickTopOffset;
-//           bricks[c][r].x = brickX;
-//           bricks[c][r].y = brickY;
-//           image(greyBrick, brickX, brickY);
-//         }
-//       }
-//     }
-//   }
-// }
+function colissionDectection() {
+  for (let c=0; c<brickColumnCount; c++) {
+    for (let r=0; r<brickRowCount; r++) {
+      let b = bricks[c][r];
+      if(b.status > 0) {
+        if (x >= b.x && x <= b.x+72 && y >= b.y && y <= b.y+32){
+          dy = -dy;
+          b.status = b.status - 1;
+        }
+      }
+    }
+  }
+}
+
+//This function places all the bricks on the canvas
+function brickSpawn() {
+  if (state === 2) {
+
+    for(let c=0; c<brickColumnCount; c++) {
+      bricks[c] = [];
+      for(let r=0; r<brickRowCount; r++) {
+        bricks[c][r] = { x: 0, y: 0, status: 1,};
+      }
+    }
+
+    for (let c=0; c<brickColumnCount; c++) {
+      for (let r=0; r<brickRowCount; r++) {
+        if (bricks[c][r].status === 1) {
+          let brickX = r * (brickWidth + brickSpacing) + brickSideOffset;
+          let brickY = c * (brickHeight + brickSpacing) + brickTopOffset;
+          bricks[c][r].x = brickX;
+          bricks[c][r].y = brickY;
+          image(greyBrick, brickX, brickY);
+        }
+      }
+    }
+  }
+  if (state === 3) {
+
+    for(let c=0; c<brickColumnCount; c++) {
+      bricks[c] = [];
+      for(let r=0; r<brickRowCount; r++) {
+        bricks[c][r] = { x: 0, y: 0, status: 2,};
+      }
+    }
+
+    for (let c=0; c<brickColumnCount; c++) {
+      for (let r=0; r<brickRowCount; r++) {
+        if (bricks[c][r].status === 1) {
+          let brickX = r * (brickWidth + brickSpacing) + brickSideOffset;
+          let brickY = c * (brickHeight + brickSpacing) + brickTopOffset;
+          bricks[c][r].x = brickX;
+          bricks[c][r].y = brickY;
+          image(redBrick, brickX, brickY);
+        }
+      }
+    }
+  }
+}
