@@ -9,11 +9,11 @@ let platform, redBrick, blueBrick, yellowBrick, greenBrick, greyBrick;
 let finalLevelMusic;
 let ballEllipse;
 let ballSpawned;
-let x;
-let y = 700;
-let levelOfDifficulty;
+let x = 250;
+let y = 600;
+let ballSize;
 let dx = 2;
-let dy = -2 * levelOfDifficulty;
+let dy = -2;
 let brickRowCount, brickColumnCount;
 let brickX, brickY;
 let brickTopOffset = 20;
@@ -47,11 +47,13 @@ function setup() {
 
 // Displays all the aspects of the game.
 function draw() {
-
   clear();
   gameScreens();
-  moveTheBall();
-  displayBall();
+
+  if(mouseIsPressed){
+    print(mouseX);
+    print(mouseY);
+  }
 }
 
 // This function controls the platform
@@ -62,23 +64,24 @@ function placement() {
 
 // This function moves the ball around the screen
 function moveTheBall(){
-  if (state !== 1 && mouseIsPressed){
-    x = mouseX;
-  }
   x += dx;
-  y += dy;
+  y += -dy;
 
+  if (x + 10 >= width || x + 10 <= 0) {
+    dx = -dx;
+  }
+
+  if (y + 10 >= height || y + 10 <= 0 && y >= limits && x > paddleX && x < paddleX+paddleW){
+    dy = -dy;
+  }
 }
 
 function displayBall(){
-  if (state === 2){
-    let limits = constrain(mouseX, 46, 754);
-    ellipse(limits,700,25);
-    if (mouseIsPressed){
-      ellipse(400,y,25);
-    }
-  }
+  ballSize = 20;
+  fill(255);
+  ellipse(x, y, ballSize, ballSize);
 }
+
 
 // This function displays all the different game screens like the intro screen the levels and the end screen
 function gameScreens() {
@@ -104,6 +107,9 @@ function gameScreens() {
   if (state === 2) {
     background(introScreen);
     placement();
+    displayBall();
+    moveTheBall();
+
     //brickSpawn();
   }
 
