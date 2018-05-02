@@ -129,6 +129,13 @@ function gameScreens() {
     brickSpawn();
     colissionDectection();
   }
+  if (state === "BOSS"){
+    placement();
+    displayBall();
+    moveTheBall();
+    brickSpawn();
+    colissionDectection();
+  }
 }
 
 function colissionDectection() {
