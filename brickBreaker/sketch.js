@@ -6,7 +6,7 @@
 let state;
 let introScreen, finalLevel;
 let platform, redBrick, blueBrick, yellowBrick, greenBrick, greyBrick, greekBrick;
-let finalLevelMusic, gameMusic;
+let finalLevelMusic, gameMusic, bounceSoundEffect;
 let ballEllipse;
 let ballSpawned;
 let x = 250;
@@ -41,11 +41,13 @@ function preload(){
   finalLevel = loadImage("assets/final.jpg");
   platform = loadImage("assets/platform.png");
   finalLevelMusic = loadSound("assets/Music/FINALBOSSPOWERUP.wav");
-  gameMusic  = loadSound("assets/Music/")
+  bounceSoundEffect = loadSound("assets/Music/bounceSoundEffect.wav");
+  gameMusic  = loadSound("assets/Music/gameMusic.mp3");
 }
 
 // This sets up the canvas, the state of the screen
 function setup() {
+  gameMusic.play();
   let canvas = createCanvas(800, 800);
   canvas.position(windowWidth/4, 0);
   noCursor();
@@ -71,14 +73,17 @@ function moveTheBall(){
   y += -dy;
 
   if (x + 10 >= width || x -10 <= 0) {
+    bounceSoundEffect.play();
     dx = -dx;
   }
 
   if (y + 10 >= height || y -10 <= 0){
+    bounceSoundEffect.play();
     dy = -dy;
   }
 
   if (y === 700 && x <= limits + platform.width && x >= limits+ 88 - platform.width) {
+    bounceSoundEffect.play();
     dy = -dy;
   }
 
@@ -185,6 +190,7 @@ function colissionDectection() {
       if(b.status >= 1) {
         if (x >= b.x && x <= b.x + 72 && y >= b.y && y <= b.y + 32){
           dy = -dy;
+          bounceSoundEffect.play();
           b.status = b.status - 1;
         }
       }
