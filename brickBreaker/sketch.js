@@ -6,7 +6,7 @@
 let state;
 let introScreen, finalLevel;
 let platform, redBrick, blueBrick, yellowBrick, greenBrick, greyBrick, greekBrick;
-let finalLevelMusic, gameMusic, bounceSoundEffect;
+let finalLevelMusic, gameMusic;
 let ballEllipse;
 let ballSpawned;
 let x = 250;
@@ -26,6 +26,9 @@ let brickHeight = 32;
 let bricks = [];
 let brickStatusState = true;
 let level;
+let bounce;
+let score;
+let levelOfDifficulty;
 
 document.addEventListener("contextmenu", event => event.preventDefault());
 
@@ -41,13 +44,13 @@ function preload(){
   finalLevel = loadImage("assets/final.jpg");
   platform = loadImage("assets/platform.png");
   finalLevelMusic = loadSound("assets/Music/FINALBOSSPOWERUP.wav");
-  bounceSoundEffect = loadSound("assets/Music/bounceSoundEffect.wav");
   gameMusic  = loadSound("assets/Music/gameMusic.mp3");
+  bounce = loadSound("assets/Music/bounceSoundEffect.wav");
 }
 
 // This sets up the canvas, the state of the screen
 function setup() {
-  gameMusic.play();
+  gameMusic.loop();
   let canvas = createCanvas(800, 800);
   canvas.position(windowWidth/4, 0);
   noCursor();
@@ -73,18 +76,18 @@ function moveTheBall(){
   y += -dy;
 
   if (x + 10 >= width || x -10 <= 0) {
-    bounceSoundEffect.play();
     dx = -dx;
+    bounce.play();
   }
 
   if (y + 10 >= height || y -10 <= 0){
-    bounceSoundEffect.play();
     dy = -dy;
+    bounce.play();
   }
 
   if (y === 700 && x <= limits + platform.width && x >= limits+ 88 - platform.width) {
-    bounceSoundEffect.play();
     dy = -dy;
+    bounce.play();
   }
 
   if (y >= 775){
@@ -97,6 +100,13 @@ function displayBall(){
   ballSize = 20;
   fill(255);
   ellipse(x, y, ballSize, ballSize);
+}
+function restart(){
+  x = 250;
+  y = 400;
+  levelOfDifficulty = 1;
+  score = 0;
+  brickStatusState = true;
 }
 
 function brickStatus() {
@@ -178,7 +188,8 @@ function gameScreens() {
     textSize(32);
     text("C L I C K  t o  R E S T A R T", 400, 550);
     if (mouseIsPressed){
-      setup();
+      state = 1;
+      restart();
     }
   }
 }
@@ -190,8 +201,13 @@ function colissionDectection() {
       if(b.status >= 1) {
         if (x >= b.x && x <= b.x + 72 && y >= b.y && y <= b.y + 32){
           dy = -dy;
-          bounceSoundEffect.play();
           b.status = b.status - 1;
+          bounce.play();
+          score++;
+          if (score === 120){
+            state++;
+            restart();
+          }
         }
       }
     }
@@ -210,19 +226,25 @@ function brickSpawn() {
 
     for (let c=0; c<brickColumnCount; c++) {
       for (let r=0; r<brickRowCount; r++) {
-        if (bricks[c][r].status >= 1) {
+        if (bricks[c][r].status === 2) {
           let brickX = r * (brickWidth + brickSpacing) + brickSideOffset;
           let brickY = c * (brickHeight + brickSpacing) + brickTopOffset;
           bricks[c][r].x = brickX;
           bricks[c][r].y = brickY;
           image(yellowBrick, brickX, brickY);
         }
+        if (bricks[c][r].status === 1) {
+          let brickX = r * (brickWidth + brickSpacing) + brickSideOffset;
+          let brickY = c * (brickHeight + brickSpacing) + brickTopOffset;
+          bricks[c][r].x = brickX;
+          bricks[c][r].y = brickY;
+          image(redBrick, brickX, brickY);
+        }
       }
     }
   }
-
   if (state === 3) {
-
+    levelOfDifficulty = 2;
     for (let c=0; c<brickColumnCount; c++) {
       for (let r=0; r<brickRowCount; r++) {
         if (bricks[c][r].status >= 1) {
@@ -236,7 +258,7 @@ function brickSpawn() {
     }
   }
 
-  if (state === 3) {
+  if (state === 4) {
     for (let c=0; c<brickColumnCount; c++) {
       for (let r=0; r<brickRowCount; r++) {
         if (bricks[c][r].status === 1) {
