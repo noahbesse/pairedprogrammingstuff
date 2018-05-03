@@ -3,18 +3,19 @@
 // April 19th, 2018
 
 // Variables
+let levelOfDifficulty;
 let state;
 let introScreen, finalLevel;
-let platform, redBrick, blueBrick, yellowBrick, greenBrick, greyBrick;
+let platform, redBrick, blueBrick, yellowBrick, greenBrick, greyBrick, greekBrick;
 let finalLevelMusic;
 let ballEllipse;
 let ballSpawned;
 let x = 250;
-let y = 600;
+let y = 400;
 let limits;
 let ballSize;
-let dx = 5;
-let dy = -5;
+let dx = 10*levelOfDifficulty;
+let dy = -10*levelOfDifficulty;
 let brickRowCount = 10;
 let brickColumnCount = 6;
 let brickX, brickY;
@@ -23,12 +24,18 @@ let brickSideOffset = 18.5;
 let brickSpacing = 5;
 let brickWidth = 72;
 let brickHeight = 32;
-
 let bricks = [];
 
-
-// Preloading the required asset
+for(let c=0; c<brickColumnCount; c++) {
+  bricks[c] = [];
+  for(let r=0; r<brickRowCount; r++) {
+    bricks[c][r] = { x: 0, y: 0, status: 1,};
+  }
+}
+document.addEventListener('contextmenu', event => event.preventDefault());
+// Preloading the required assets
 function preload(){
+  greekBrick = loadImage("assets/greekBrick.jpg")
   redBrick = loadImage("assets/redBrick.png");
   blueBrick = loadImage("assets/blueBrick.png");
   yellowBrick = loadImage("assets/yellowBrick.png");
@@ -43,7 +50,7 @@ function preload(){
 // This sets up the canvas, the state of the screen
 function setup() {
   let canvas = createCanvas(800, 800);
-  canvas.position(400, 0);
+  canvas.position(windowWidth/4, 0);
   noCursor();
   state = 1;
 }
@@ -53,13 +60,7 @@ function setup() {
 function draw() {
   clear();
   gameScreens();
-
-  if(mouseIsPressed){
-    print(mouseX);
-    print(mouseY);
-  }
 }
-
 // This function controls the platform
 function placement() {
   limits = constrain(mouseX - 46, 0, 708);
@@ -68,22 +69,33 @@ function placement() {
 
 // This function moves the ball around the screen
 function moveTheBall(){
-  x += dx;
-  y += -dy;
+  if (!ballSpawned){
 
-  if (x + 10 >= width || x -10 <= 0) {
-    dx = -dx;
   }
+  if (ballSpawned){
+    x += dx;
+    y += -dy;
 
-  if (y + 10 >= height || y -10 <= 0){
-    dy = -dy;
-  }
+    if (x + 10 >= width || x -10 <= 0) {
+      dx = -dx;
+    }
 
-  if (y === 700 && x <= limits + platform.width && x >= limits+ 88 - platform.width) {
-    dy = -dy;
+    if (y + 10 >= height || y -10 <= 0){
+      dy = -dy;
+    }
+
+    if (y === 700 && x <= limits + platform.width && x >= limits+ 88 - platform.width) {
+      dy = -dy;
+    }
+    if (y >= 750){
+      state = 5;
+    }
+    // if (bricks.status.contains(1)){
+    //   state++;
+    // }
   }
 }
-
+//shows the ellipse that makes up the ball
 function displayBall(){
   ballSize = 20;
   fill(255);
@@ -102,16 +114,23 @@ function gameScreens() {
     text("B R E A K E R", 400,250);
 
     textSize(32);
-    text("P r e s s   S P A C E   t o   p l a y", 400, 550);
+    text("P r e s s   S P A C E   o r  C L I C K  t o   p l a y", 400, 550);
 
+
+    if (mouseIsPressed){
+      state = 2;
+
+    }
     if (keyIsPressed){
       if (keyCode === 32) {
         state = 2;
+    
       }
     }
   }
 
   if (state === 2) {
+    levelOfDifficulty = 1;
     background(introScreen);
     placement();
     displayBall();
@@ -122,6 +141,7 @@ function gameScreens() {
   }
 
   if (state === 3) {
+    levelOfDifficulty = 2;
     background(introScreen);
     placement();
     displayBall();
@@ -129,12 +149,29 @@ function gameScreens() {
     brickSpawn();
     colissionDectection();
   }
-  if (state === "BOSS"){
+  if (state === 4){
+    levelOfDifficulty = 5;
+    background(finalLevel);
     placement();
     displayBall();
     moveTheBall();
     brickSpawn();
     colissionDectection();
+  }
+  if (state === 5){
+    background(introScreen);
+    textAlign(CENTER);
+    fill(150, 241, 247);
+    textSize(130);
+    textStyle(BOLD);
+    textFont("Agency FB");
+    text("G A M E  O V E R", 400,250);
+
+    textSize(32);
+    text("C L I C K  t o  R E S T A R T", 400, 550);
+    if (mouseIsPressed){
+      state = 1;
+    }
   }
 }
 
@@ -156,13 +193,6 @@ function colissionDectection() {
 function brickSpawn() {
   if (state === 2) {
 
-    for(let c=0; c<brickColumnCount; c++) {
-      bricks[c] = [];
-      for(let r=0; r<brickRowCount; r++) {
-        bricks[c][r] = { x: 0, y: 0, status: 1,};
-      }
-    }
-
     for (let c=0; c<brickColumnCount; c++) {
       for (let r=0; r<brickRowCount; r++) {
         if (bricks[c][r].status === 1) {
@@ -176,14 +206,6 @@ function brickSpawn() {
     }
   }
   if (state === 3) {
-
-    for(let c=0; c<brickColumnCount; c++) {
-      bricks[c] = [];
-      for(let r=0; r<brickRowCount; r++) {
-        bricks[c][r] = { x: 0, y: 0, status: 2,};
-      }
-    }
-
     for (let c=0; c<brickColumnCount; c++) {
       for (let r=0; r<brickRowCount; r++) {
         if (bricks[c][r].status === 1) {
@@ -192,6 +214,19 @@ function brickSpawn() {
           bricks[c][r].x = brickX;
           bricks[c][r].y = brickY;
           image(redBrick, brickX, brickY);
+        }
+      }
+    }
+  }
+  if (state === 4) {
+    for (let c=0; c<brickColumnCount; c++) {
+      for (let r=0; r<brickRowCount; r++) {
+        if (bricks[c][r].status === 1) {
+          let brickX = r * (brickWidth + brickSpacing) + brickSideOffset;
+          let brickY = c * (brickHeight + brickSpacing) + brickTopOffset;
+          bricks[c][r].x = brickX;
+          bricks[c][r].y = brickY;
+          image(greekBrick, brickX, brickY);
         }
       }
     }
