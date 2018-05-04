@@ -126,16 +126,35 @@ function restart(){
 
 // This gives all the values in the array a status of 1
 function brickStatus() {
-  if (brickStatusState === true){
+  if (brickStatusState === true && state === 2){
     for(let c=0; c<brickColumnCount; c++) {
       bricks[c] = [];
       for(let r=0; r<brickRowCount; r++) {
-        bricks[c][r] = { x: 0, y: 0, status: level,};
+        bricks[c][r] = { x: 0, y: 0, status: 2,};
+      }
+      brickStatusState = false;
+    }
+  }
+  if (brickStatusState === true && state === 3){
+    for(let c=0; c<brickColumnCount; c++) {
+      bricks[c] = [];
+      for(let r=0; r<brickRowCount; r++) {
+        bricks[c][r] = { x: 0, y: 0, status: 3,};
+      }
+      brickStatusState = false;
+    }
+  }
+  if (brickStatusState === true && state === 4){
+    for(let c=0; c<brickColumnCount; c++) {
+      bricks[c] = [];
+      for(let r=0; r<brickRowCount; r++) {
+        bricks[c][r] = { x: 0, y: 0, status: 4,};
       }
       brickStatusState = false;
     }
   }
 }
+
 
 // This function displays all the different game screens like the intro screen the levels and the end screen
 function gameScreens() {
@@ -218,18 +237,18 @@ function colissionDectection() {
   for (let c=0; c<brickColumnCount; c++) {
     for (let r=0; r<brickRowCount; r++) {
       let b = bricks[c][r];
-      if(b.status >= 1) {
+      if(b.status != 0) {
         if (x >= b.x && x <= b.x + 72 && y >= b.y && y <= b.y + 32){
           score++;
           dy = -dy;
           b.status = b.status - 1;
           bounce.play();
         }
-        if( state != 3 &&score === brickRowCount*brickColumnCount) {
+        if( state != 3 && score === brickRowCount*brickColumnCount*state) {
           restart();
           state++;
         }
-        if (state === 3 && score === brickRowCount*brickColumnCount){
+        if (state === 3 && score === brickRowCount*brickColumnCount*state){
           restart();
           gameMusic.amp(0.0);
           finalLevelMusic.amp(0.3);
@@ -250,14 +269,14 @@ function brickSpawn() {
           let brickY = c * (brickHeight + brickSpacing) + brickTopOffset;
           bricks[c][r].x = brickX;
           bricks[c][r].y = brickY;
-          image(yellowBrick, brickX, brickY);
+          image(greyBrick, brickX, brickY);
         }
         if (bricks[c][r].status === 1) {
           let brickX = r * (brickWidth + brickSpacing) + brickSideOffset;
           let brickY = c * (brickHeight + brickSpacing) + brickTopOffset;
           bricks[c][r].x = brickX;
           bricks[c][r].y = brickY;
-          image(greenBrick, brickX, brickY);
+          image(redBrick, brickX, brickY);
         }
       }
     }
@@ -278,14 +297,14 @@ function brickSpawn() {
           let brickY = c * (brickHeight + brickSpacing) + brickTopOffset;
           bricks[c][r].x = brickX;
           bricks[c][r].y = brickY;
-          image(redBrick, brickX, brickY);
+          image(greyBrick, brickX, brickY);
         }
         if (bricks[c][r].status === 1) {
           let brickX = r * (brickWidth + brickSpacing) + brickSideOffset;
           let brickY = c * (brickHeight + brickSpacing) + brickTopOffset;
           bricks[c][r].x = brickX;
           bricks[c][r].y = brickY;
-          image(greyBrick, brickX, brickY);
+          image(redBrick, brickX, brickY);
         }
       }
     }
@@ -294,12 +313,45 @@ function brickSpawn() {
   if (state === 4) {
     for (let c=0; c<brickColumnCount; c++) {
       for (let r=0; r<brickRowCount; r++) {
-        if (bricks[c][r].status === 1) {
+        if (bricks[c][r].status === 4) {
           let brickX = r * (brickWidth + brickSpacing) + brickSideOffset;
           let brickY = c * (brickHeight + brickSpacing) + brickTopOffset;
           bricks[c][r].x = brickX;
           bricks[c][r].y = brickY;
           image(greekBrick, brickX, brickY);
+        }
+      }
+    }
+    for (let c=0; c<brickColumnCount; c++) {
+      for (let r=0; r<brickRowCount; r++) {
+        if (bricks[c][r].status === 3) {
+          let brickX = r * (brickWidth + brickSpacing) + brickSideOffset;
+          let brickY = c * (brickHeight + brickSpacing) + brickTopOffset;
+          bricks[c][r].x = brickX;
+          bricks[c][r].y = brickY;
+          image(blueBrick, brickX, brickY);
+        }
+      }
+    }
+    for (let c=0; c<brickColumnCount; c++) {
+      for (let r=0; r<brickRowCount; r++) {
+        if (bricks[c][r].status === 2) {
+          let brickX = r * (brickWidth + brickSpacing) + brickSideOffset;
+          let brickY = c * (brickHeight + brickSpacing) + brickTopOffset;
+          bricks[c][r].x = brickX;
+          bricks[c][r].y = brickY;
+          image(greyBrick, brickX, brickY);
+        }
+      }
+    }
+    for (let c=0; c<brickColumnCount; c++) {
+      for (let r=0; r<brickRowCount; r++) {
+        if (bricks[c][r].status === 1) {
+          let brickX = r * (brickWidth + brickSpacing) + brickSideOffset;
+          let brickY = c * (brickHeight + brickSpacing) + brickTopOffset;
+          bricks[c][r].x = brickX;
+          bricks[c][r].y = brickY;
+          image(redBrick, brickX, brickY);
         }
       }
     }
