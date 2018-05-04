@@ -50,6 +50,9 @@ function preload(){
 
 // This sets up the canvas, the state of the screen
 function setup() {
+  gameMusic.amp(0.2);
+  finalLevelMusic.amp(0.0);
+  finalLevelMusic.loop();
   gameMusic.loop();
   let canvas = createCanvas(800, 800);
   canvas.position(windowWidth/4, 0);
@@ -59,12 +62,11 @@ function setup() {
 
 // Displays all the aspects of the game.
 function draw() {
-  clear();
   gameScreens();
 }
 
 // This function controls the platform
-function placement() {
+function platformPlacement() {
   limits = constrain(mouseX - 46, 0, 708);
   image(platform, limits, 700);
 }
@@ -84,8 +86,19 @@ function moveTheBall(){
     bounce.play();
   }
 
-  if (y === 700 && x <= limits + platform.width && x >= limits+ 88 - platform.width) {
+  if (y === 700 && x < limits + platform.width && x > limits+ 88 - platform.width/2) {
     dy = -dy;
+    dx = Math.abs(dx);
+    bounce.play();
+  }
+  if (y === 700 && x < limits + platform.width/2 && x > limits+ 88 - platform.width) {
+    dy = -dy;
+    dx = -(Math.abs(dx));
+    bounce.play();
+  }
+  if (y === 700 && x === platform.width/2) {
+    dy = -dy;
+    dx = random(dx,-dx);
     bounce.play();
   }
 
@@ -107,6 +120,8 @@ function restart(){
   y = 400;
   score = 0;
   brickStatusState = true;
+  finalLevelMusic.amp(0.0);
+  gameMusic.amp(0.2);
 }
 
 // This gives all the values in the array a status of 1
@@ -150,7 +165,7 @@ function gameScreens() {
     level = 1;
     background(introScreen);
     brickStatus();
-    placement();
+    platformPlacement();
     displayBall();
     moveTheBall();
     brickSpawn();
@@ -160,15 +175,24 @@ function gameScreens() {
 
   if (state === 3) {
     level = 3;
-    restart();
     background(introScreen);
     brickStatus();
-    placement();
+    platformPlacement();
     displayBall();
     moveTheBall();
     brickSpawn();
     colissionDectection();
 
+  }
+  if (state === 4){
+    level = 5;
+    background(finalLevel);
+    brickStatus();
+    platformPlacement();
+    displayBall();
+    moveTheBall();
+    brickSpawn();
+    colissionDectection();
   }
 
   if (state === 5){
@@ -201,7 +225,14 @@ function colissionDectection() {
           b.status = b.status - 1;
           bounce.play();
         }
-        if( score === brickRowCount*brickColumnCount) {
+        if( state != 3 &&score === brickRowCount*brickColumnCount) {
+          restart();
+          state++;
+        }
+        if (state === 3 && score === brickRowCount*brickColumnCount){
+          restart();
+          gameMusic.amp(0.0);
+          finalLevelMusic.amp(0.3);
           state++;
         }
       }
