@@ -1,7 +1,8 @@
 // Brickbreaker
 // Tony and Noah
 // April 19th, 2018
-
+//Tony's Code: Brick spawn and brick placement, along with some of the ball moving scripts.
+//Noah's Code: level design, some of the ball moving script, level switching, platform movement and interaction.
 // Variables
 let state = 1;
 let introScreen, finalLevel;
