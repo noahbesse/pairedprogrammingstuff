@@ -1,8 +1,10 @@
 // Brickbreaker
 // Tony and Noah
 // April 19th, 2018
-//Tony's Code: Brick spawn and brick placement, along with some of the ball moving scripts.
-//Noah's Code: level design, some of the ball moving script, level switching, platform movement and interaction.
+
+//Tony's Code: Brick spawn and brick placement, collision detection, along with some of the ball moving scripts, level design and art assets.
+//Noah's Code: Level switching, some of the ball moving script, platform movement and interaction.
+
 // Variables
 let state = 1;
 let introScreen, finalLevel;
@@ -52,7 +54,7 @@ function preload(){
 
 // This sets up the canvas, the state of the screen and some other small things
 function setup() {
-  gameMusic.amp(0.2);
+  gameMusic.amp(1);
   gameMusic.loop();
   finalLevelMusic.amp(0.0);
   finalLevelMusic.loop();
@@ -167,7 +169,6 @@ function colissionDectection() {
         }
         if (state === 3 && score === brickRowCount*brickColumnCount*state){
           restart();
-          gameMusic.amp(0.0);
           finalLevelMusic.amp(0.3);
           state++;
         }
@@ -343,6 +344,7 @@ function gameScreens() {
   }
   // This is the end screen
   if (state === 5) {
+    gameMusic.stop();
     finalLevelMusic.stop();
     winScreenMusic.amp(1);
     background(introScreen);
