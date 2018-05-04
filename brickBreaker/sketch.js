@@ -15,8 +15,8 @@ let limits;
 let ballSize;
 let dx = 5;
 let dy = -5;
-let brickRowCount = 10;
-let brickColumnCount = 6;
+let brickRowCount = 1;
+let brickColumnCount = 1;
 let brickX, brickY;
 let brickTopOffset = 20;
 let brickSideOffset = 18.5;
@@ -28,8 +28,8 @@ let brickStatusState = true;
 let level;
 let bounce;
 let score;
-let levelOfDifficulty;
 
+// Disables right-click on the mouse
 document.addEventListener("contextmenu", event => event.preventDefault());
 
 // Preloading the required assets
@@ -56,7 +56,6 @@ function setup() {
   noCursor();
   state = 1;
 }
-
 
 // Displays all the aspects of the game.
 function draw() {
@@ -93,24 +92,25 @@ function moveTheBall(){
   if (y >= 775){
     state = 5;
   }
-
 }
-//shows the ellipse that makes up the ball
+
+// This function makes the ball
 function displayBall(){
   ballSize = 20;
   fill(255);
   ellipse(x, y, ballSize, ballSize);
 }
+
+// This function restarts the game
 function restart(){
   x = 250;
   y = 400;
-  levelOfDifficulty = 1;
   score = 0;
   brickStatusState = true;
 }
 
+// This gives all the values in the array a status of 1
 function brickStatus() {
-  // This gives all the values in the array a status of 1
   if (brickStatusState === true){
     for(let c=0; c<brickColumnCount; c++) {
       bricks[c] = [];
@@ -147,7 +147,7 @@ function gameScreens() {
   }
 
   if (state === 2) {
-    level = 2;
+    level = 1;
     background(introScreen);
     brickStatus();
     placement();
@@ -155,9 +155,12 @@ function gameScreens() {
     moveTheBall();
     brickSpawn();
     colissionDectection();
+
   }
 
   if (state === 3) {
+    level = 3;
+    restart();
     background(introScreen);
     brickStatus();
     placement();
@@ -165,17 +168,9 @@ function gameScreens() {
     moveTheBall();
     brickSpawn();
     colissionDectection();
+
   }
 
-  if (state === 4){
-    background(finalLevel);
-    brickStatus();
-    placement();
-    displayBall();
-    moveTheBall();
-    brickSpawn();
-    colissionDectection();
-  }
   if (state === 5){
     background(introScreen);
     textAlign(CENTER);
@@ -194,36 +189,29 @@ function gameScreens() {
   }
 }
 
+// This function check whether or not the ball hits a brick
 function colissionDectection() {
   for (let c=0; c<brickColumnCount; c++) {
     for (let r=0; r<brickRowCount; r++) {
       let b = bricks[c][r];
       if(b.status >= 1) {
         if (x >= b.x && x <= b.x + 72 && y >= b.y && y <= b.y + 32){
+          score++;
           dy = -dy;
           b.status = b.status - 1;
           bounce.play();
-          score++;
-          if (score === 120){
-            state++;
-            restart();
-          }
+        }
+        if( score === brickRowCount*brickColumnCount) {
+          state++;
         }
       }
     }
   }
 }
-//
-// image(yellowBrick, brickX, brickY);
-// image(greenBrick, brickX, brickY);
-// image(blueBrick, brickX, brickY);
-// image(redBrick, brickX, brickY);
-// image(greyBrick, brickX, brickY);
 
 //This function places all the bricks on the canvas
 function brickSpawn() {
   if (state === 2) {
-
     for (let c=0; c<brickColumnCount; c++) {
       for (let r=0; r<brickRowCount; r++) {
         if (bricks[c][r].status === 2) {
@@ -238,21 +226,35 @@ function brickSpawn() {
           let brickY = c * (brickHeight + brickSpacing) + brickTopOffset;
           bricks[c][r].x = brickX;
           bricks[c][r].y = brickY;
-          image(redBrick, brickX, brickY);
+          image(greenBrick, brickX, brickY);
         }
       }
     }
   }
+
   if (state === 3) {
-    levelOfDifficulty = 2;
     for (let c=0; c<brickColumnCount; c++) {
       for (let r=0; r<brickRowCount; r++) {
-        if (bricks[c][r].status >= 1) {
+        if (bricks[c][r].status === 3) {
           let brickX = r * (brickWidth + brickSpacing) + brickSideOffset;
           let brickY = c * (brickHeight + brickSpacing) + brickTopOffset;
           bricks[c][r].x = brickX;
           bricks[c][r].y = brickY;
-          image(greenBrick, brickX, brickY);
+          image(blueBrick, brickX, brickY);
+        }
+        if (bricks[c][r].status === 2) {
+          let brickX = r * (brickWidth + brickSpacing) + brickSideOffset;
+          let brickY = c * (brickHeight + brickSpacing) + brickTopOffset;
+          bricks[c][r].x = brickX;
+          bricks[c][r].y = brickY;
+          image(redBrick, brickX, brickY);
+        }
+        if (bricks[c][r].status === 1) {
+          let brickX = r * (brickWidth + brickSpacing) + brickSideOffset;
+          let brickY = c * (brickHeight + brickSpacing) + brickTopOffset;
+          bricks[c][r].x = brickX;
+          bricks[c][r].y = brickY;
+          image(greyBrick, brickX, brickY);
         }
       }
     }
